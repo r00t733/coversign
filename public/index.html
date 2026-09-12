@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>coversign — comparador de portadas de libros</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1 class="logo">coversign</h1>
+    <div class="header-actions">
+      <input id="search-input" type="text" placeholder="Buscar título o autor..." autocomplete="off" aria-label="Buscar libro o autor">
+      <button id="contribute-btn" class="btn" type="button">+ Aportar portada</button>
+    </div>
+  </header>
+
+  <main>
+    <p id="empty-state" class="empty-state" hidden>No se encontraron resultados.</p>
+    <section id="grid" class="grid" aria-label="Portadas de libros"></section>
+  </main>
+
+  <footer class="site-footer">
+    <p>coversign — comparación de portadas de libros por edición, editorial y país.</p>
+  </footer>
+
+  <!-- Modal de detalle -->
+  <div id="detail-modal" class="modal-overlay" hidden>
+    <div class="modal-panel detail-panel">
+      <button class="modal-close" data-close-detail type="button" aria-label="Cerrar">×</button>
+      <div class="detail-body">
+        <div class="detail-cover-col">
+          <div id="detail-cover-slot" class="cover-slot"></div>
+        </div>
+        <div class="detail-info-col">
+          <h2 id="detail-title"></h2>
+          <p id="detail-original" class="detail-original"></p>
+
+          <dl class="detail-meta">
+            <div><dt>Autor</dt><dd id="detail-author"></dd></div>
+            <div><dt>Editorial</dt><dd id="detail-publisher"></dd></div>
+            <div><dt>País</dt><dd id="detail-country"></dd></div>
+            <div><dt>Idioma</dt><dd id="detail-language"></dd></div>
+            <div><dt>Año</dt><dd id="detail-year"></dd></div>
+          </dl>
+
+          <div id="detail-design" class="detail-block"></div>
+          <p id="detail-description" class="detail-block"></p>
+
+          <div id="detail-source-block" class="detail-source-block">
+            <a id="detail-source" class="detail-source" target="_blank" rel="noopener">Ver / leer esta edición →</a>
+            <span id="detail-source-site" class="detail-source-site"></span>
+          </div>
+
+          <div class="detail-editions">
+            <h3>Otras ediciones <span id="detail-editions-count" class="muted"></span></h3>
+            <div id="detail-editions-row" class="editions-row"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de aportar portada -->
+  <div id="contribute-modal" class="modal-overlay" hidden>
+    <div class="modal-panel contribute-panel">
+      <button class="modal-close" data-close-contribute type="button" aria-label="Cerrar">×</button>
+      <h2>Aportar portada</h2>
+      <p class="muted small">Suma una edición de un libro existente o registra un libro nuevo con su primera portada.</p>
+
+      <form id="contribute-form" novalidate>
+        <label class="field">
+          <span>Libro</span>
+          <select id="book-select">
+            <option value="__new__">+ Nuevo libro</option>
+          </select>
+        </label>
+
+        <fieldset id="new-book-fields" class="new-book-fields">
+          <label class="field">
+            <span>Título original *</span>
+            <input type="text" id="originalTitle" name="originalTitle">
+          </label>
+          <label class="field">
+            <span>Autor</span>
+            <input type="text" id="author" name="author">
+          </label>
+          <label class="field">
+            <span>Idioma original</span>
+            <input type="text" id="originalLanguage" name="originalLanguage">
+          </label>
+        </fieldset>
+
+        <label class="field">
+          <span>Título de esta edición *</span>
+          <input type="text" name="title" required>
+        </label>
+        <label class="field">
+          <span>Editorial *</span>
+          <input type="text" name="publisher" required>
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span>País *</span>
+            <input type="text" name="country" required>
+          </label>
+          <label class="field">
+            <span>Idioma *</span>
+            <input type="text" name="language" required>
+          </label>
+          <label class="field">
+            <span>Año</span>
+            <input type="number" name="year" min="1400" max="2100">
+          </label>
+        </div>
+
+        <label class="field">
+          <span>URL de la portada (imagen)</span>
+          <input type="url" name="coverUrl" placeholder="https://...">
+        </label>
+        <label class="field">
+          <span>Descripción del libro</span>
+          <textarea name="description" rows="3"></textarea>
+        </label>
+        <label class="field">
+          <span>Características de diseño editorial / de portada</span>
+          <textarea name="designNotes" rows="2"></textarea>
+        </label>
+        <label class="field">
+          <span>Link para ver / leer esta edición</span>
+          <input type="url" name="sourceLink" placeholder="https://...">
+        </label>
+        <label class="field">
+          <span>Sitio de referencia (fuente de los datos)</span>
+          <input type="text" name="sourceSite" placeholder="Ej. Open Library, editorial oficial...">
+        </label>
+
+        <p id="contribute-error" class="form-error" hidden></p>
+        <button type="submit" class="btn btn-primary">Publicar portada</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

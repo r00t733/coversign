@@ -1,0 +1,252 @@
+{
+  "books": [
+    {
+      "id": "1984",
+      "originalTitle": "Nineteen Eighty-Four",
+      "author": "George Orwell",
+      "originalLanguage": "Inglés",
+      "editions": [
+        {
+          "id": "1984-uk-penguin",
+          "title": "Nineteen Eighty-Four",
+          "publisher": "Penguin Books",
+          "country": "Reino Unido",
+          "language": "Inglés",
+          "year": 1987,
+          "coverUrl": "https://covers.openlibrary.org/b/isbn/9780141187761-L.jpg",
+          "description": "Winston Smith vive bajo la vigilancia total del Partido en una Londres distópica. Una advertencia sobre el totalitarismo, la propaganda y la vigilancia masiva.",
+          "designNotes": "Portada tipográfica sobria en rojo, negro y blanco: el ojo del Gran Hermano sugerido mediante negativos geométricos, típica de la colección Penguin Modern Classics.",
+          "sourceLink": "https://openlibrary.org/isbn/9780141187761",
+          "sourceSite": "Open Library"
+        },
+        {
+          "id": "1984-us-signet",
+          "title": "1984",
+          "publisher": "Signet Classics",
+          "country": "Estados Unidos",
+          "language": "Inglés",
+          "year": 1961,
+          "coverUrl": "https://covers.openlibrary.org/b/isbn/9780451524935-L.jpg",
+          "description": "Edición estadounidense clásica de bolsillo, muy usada en escuelas y universidades desde los años 60.",
+          "designNotes": "Ilustración figurativa de un rostro vigilado con tipografía condensada en mayúsculas; estética de guerra fría.",
+          "sourceLink": "https://openlibrary.org/isbn/9780451524935",
+          "sourceSite": "Open Library"
+        },
+        {
+          "id": "1984-es-debolsillo",
+          "title": "1984",
+          "publisher": "Debolsillo",
+          "country": "España",
+          "language": "Español",
+          "year": 2013,
+          "coverUrl": "https://covers.openlibrary.org/b/isbn/9788499890944-L.jpg",
+          "description": "Traducción española de la novela de Orwell, publicada en la colección de bolsillo de Penguin Random House en español.",
+          "designNotes": "Composición minimalista con un gran ojo estilizado en rojo sobre fondo negro, referencia directa al lema 'El Gran Hermano te vigila'.",
+          "sourceLink": "https://openlibrary.org/isbn/9788499890944",
+          "sourceSite": "Open Library"
+        },
+        {
+          "id": "1984-fr-gallimard",
+          "title": "1984",
+          "publisher": "Gallimard (Folio)",
+          "country": "Francia",
+          "language": "Francés",
+          "year": 1972,
+          "coverUrl": "https://covers.openlibrary.org/b/isbn/9782070368228-L.jpg",
+          "description": "Edición francesa dentro de la icónica colección Folio de Gallimard.",
+          "designNotes": "Diseño de cubierta uniforme de la colección Folio: banda de color superior e inferior, tipografía institucional, sin ilustración.",
+          "sourceLink": "https://openlibrary.org/isbn/9782070368228",
+          "sourceSite": "Open Library"
+        }
+      ]
+    },
+    {
+      "id": "el-principito",
+      "originalTitle": "Le Petit Prince",
+      "author": "Antoine de Saint-Exupéry",
+      "originalLanguage": "Francés",
+      "editions": [
+        {
+          "id": "principito-fr-gallimard",
+          "title": "Le Petit Prince",
+          "publisher": "Gallimard",
+          "country": "Francia",
+          "language": "Francés",
+          "year": 1946,
+          "coverUrl": "https://covers.openlibrary.org/b/isbn/9782070408504-L.jpg",
+          "description": "Edición original francesa, con las acuarelas del propio autor integradas a la narración.",
+          "designNotes": "Ilustración original del autor: el principito de pie sobre su asteroide, fondo blanco, tipografía manuscrita del título.",
+          "sourceLink": "https://openlibrary.org/isbn/9782070408504",
+          "sourceSite": "Open Library"
+        },
+        {
+          "id": "principito-us-harcourt",
+          "title": "The Little Prince",
+          "publisher": "Harcourt",
+          "country": "Estados Unidos",
+          "language": "Inglés",
+          "year": 2000,
+          "coverUrl": "https://covers.openlibrary.org/b/isbn/9780156012195-L.jpg",
+          "description": "Traducción al inglés ampliamente distribuida en el mercado norteamericano.",
+          "designNotes": "Conserva la ilustración original del autor, con ligeros ajustes de color y una tipografía serif para el título en inglés.",
+          "sourceLink": "https://openlibrary.org/isbn/9780156012195",
+          "sourceSite": "Open Library"
+        },
+        {
+          "id": "principito-es-salamandra",
+          "title": "El Principito",
+          "publisher": "Salamandra",
+          "country": "España",
+          "language": "Español",
+          "year": 2015,
+          "coverUrl": "https://covers.openlibrary.org/b/isbn/9788498381498-L.jpg",
+          "description": "Una de las ediciones en español más difundidas en librerías de España y Latinoamérica.",
+          "designNotes": "Ilustración original del autor sobre fondo azul cielo, con el título en tipografía redondeada de tono infantil.",
+          "sourceLink": "https://openlibrary.org/isbn/9788498381498",
+          "sourceSite": "Open Library"
+        }
+      ]
+    },
+    {
+      "id": "cien-anos-de-soledad",
+      "originalTitle": "Cien años de soledad",
+      "author": "Gabriel García Márquez",
+      "originalLanguage": "Español",
+      "editions": [
+        {
+          "id": "cien-anos-es-debolsillo",
+          "title": "Cien años de soledad",
+          "publisher": "Debolsillo",
+          "country": "Colombia",
+          "language": "Español",
+          "year": 2014,
+          "coverUrl": "https://covers.openlibrary.org/b/isbn/9788497592208-L.jpg",
+          "description": "Edición en español de la obra cumbre del realismo mágico, la saga de la familia Buendía en Macondo.",
+          "designNotes": "Ilustración de estilo tropical con mariposas amarillas, referencia directa a un pasaje icónico de la novela.",
+          "sourceLink": "https://openlibrary.org/isbn/9788497592208",
+          "sourceSite": "Open Library"
+        },
+        {
+          "id": "cien-anos-us-harper",
+          "title": "One Hundred Years of Solitude",
+          "publisher": "Harper Perennial",
+          "country": "Estados Unidos",
+          "language": "Inglés",
+          "year": 2006,
+          "coverUrl": "https://covers.openlibrary.org/b/isbn/9780060883287-L.jpg",
+          "description": "Traducción al inglés de Gregory Rabassa, la más difundida en el mercado estadounidense.",
+          "designNotes": "Collage pictórico de motivos selváticos y florales en tonos cálidos, tipografía serif clásica.",
+          "sourceLink": "https://openlibrary.org/isbn/9780060883287",
+          "sourceSite": "Open Library"
+        },
+        {
+          "id": "cien-anos-uk-penguin",
+          "title": "One Hundred Years of Solitude",
+          "publisher": "Penguin",
+          "country": "Reino Unido",
+          "language": "Inglés",
+          "year": 2014,
+          "coverUrl": "https://covers.openlibrary.org/b/isbn/9780141032457-L.jpg",
+          "description": "Edición británica dentro de la colección Penguin Modern Classics.",
+          "designNotes": "Ilustración plana de estilo naíf con paleta de verdes y ocres, siguiendo la línea gráfica de la colección.",
+          "sourceLink": "https://openlibrary.org/isbn/9780141032457",
+          "sourceSite": "Open Library"
+        }
+      ]
+    },
+    {
+      "id": "harry-potter-1",
+      "originalTitle": "Harry Potter and the Philosopher's Stone",
+      "author": "J. K. Rowling",
+      "originalLanguage": "Inglés",
+      "editions": [
+        {
+          "id": "hp1-uk-bloomsbury",
+          "title": "Harry Potter and the Philosopher's Stone",
+          "publisher": "Bloomsbury",
+          "country": "Reino Unido",
+          "language": "Inglés",
+          "year": 1997,
+          "coverUrl": "https://covers.openlibrary.org/b/isbn/9780747532699-L.jpg",
+          "description": "Primera edición británica de la saga, la que inició el fenómeno editorial de Harry Potter.",
+          "designNotes": "Ilustración pintada de Thomas Taylor: Harry en el andén 9¾ junto al Expreso de Hogwarts, estilo acuarela detallado.",
+          "sourceLink": "https://openlibrary.org/isbn/9780747532699",
+          "sourceSite": "Open Library"
+        },
+        {
+          "id": "hp1-us-scholastic",
+          "title": "Harry Potter and the Sorcerer's Stone",
+          "publisher": "Scholastic",
+          "country": "Estados Unidos",
+          "language": "Inglés",
+          "year": 1998,
+          "coverUrl": "https://covers.openlibrary.org/b/isbn/9780590353427-L.jpg",
+          "description": "Edición estadounidense; el título se adaptó de 'Philosopher's Stone' a 'Sorcerer's Stone' para el mercado local.",
+          "designNotes": "Ilustración de Mary GrandPré con colores más saturados y una composición más dinámica que la edición británica.",
+          "sourceLink": "https://openlibrary.org/isbn/9780590353427",
+          "sourceSite": "Open Library"
+        },
+        {
+          "id": "hp1-es-salamandra",
+          "title": "Harry Potter y la piedra filosofal",
+          "publisher": "Salamandra",
+          "country": "España",
+          "language": "Español",
+          "year": 1999,
+          "coverUrl": "https://covers.openlibrary.org/b/isbn/9788478884452-L.jpg",
+          "description": "Traducción al español publicada por Salamandra, la editorial que introdujo la saga en el mercado hispanohablante.",
+          "designNotes": "Ilustración de estilo más ilustrativo-infantil con tipografía dorada en relieve para el título.",
+          "sourceLink": "https://openlibrary.org/isbn/9788478884452",
+          "sourceSite": "Open Library"
+        },
+        {
+          "id": "hp1-jp-sayzansha",
+          "title": "ハリー・ポッターと賢者の石",
+          "publisher": "Say-zan-sha",
+          "country": "Japón",
+          "language": "Japonés",
+          "year": 1999,
+          "coverUrl": "",
+          "description": "Edición japonesa de la primera novela de la saga, publicada con ilustraciones propias de Dan Schlesinger.",
+          "designNotes": "Aportado manualmente: aún no se ha cargado una imagen de portada verificada para esta edición.",
+          "sourceLink": "",
+          "sourceSite": "Aporte manual"
+        }
+      ]
+    },
+    {
+      "id": "dune",
+      "originalTitle": "Dune",
+      "author": "Frank Herbert",
+      "originalLanguage": "Inglés",
+      "editions": [
+        {
+          "id": "dune-us-ace",
+          "title": "Dune",
+          "publisher": "Ace Books",
+          "country": "Estados Unidos",
+          "language": "Inglés",
+          "year": 1990,
+          "coverUrl": "https://covers.openlibrary.org/b/isbn/9780441172719-L.jpg",
+          "description": "Edición estadounidense de bolsillo de la novela seminal de ciencia ficción sobre el planeta desértico Arrakis.",
+          "designNotes": "Tipografía monumental en amarillo y naranja sobre fondo oscuro, con un pequeño gusano de arena como único elemento gráfico.",
+          "sourceLink": "https://openlibrary.org/isbn/9780441172719",
+          "sourceSite": "Open Library"
+        },
+        {
+          "id": "dune-uk-gollancz",
+          "title": "Dune",
+          "publisher": "Gollancz",
+          "country": "Reino Unido",
+          "language": "Inglés",
+          "year": 2010,
+          "coverUrl": "",
+          "description": "Edición británica dentro de la colección de clásicos de ciencia ficción de Gollancz, reconocible por su cubierta amarilla.",
+          "designNotes": "Aportado manualmente: cubierta amarilla característica de la colección SF Masterworks; pendiente de imagen verificada.",
+          "sourceLink": "",
+          "sourceSite": "Aporte manual"
+        }
+      ]
+    }
+  ]
+}
