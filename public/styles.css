@@ -316,6 +316,34 @@ main {
   margin-bottom: 2px;
 }
 
+.detail-illustrator {
+  padding-left: 12px;
+  border-left: 2px solid var(--fg);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.detail-illustrator::before {
+  content: "Diseño de portada / ilustración";
+  display: block;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+
+.detail-illustrator a {
+  color: var(--fg);
+}
+
+.detail-description {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .detail-source-block {
   margin-bottom: 24px;
   display: flex;
@@ -415,6 +443,12 @@ main {
   border-color: var(--fg);
 }
 
+.field-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
 .field-row {
   display: grid;
   grid-template-columns: 1fr 1fr 100px;
@@ -485,7 +519,8 @@ main {
     max-width: 220px;
   }
 
-  .field-row {
+  .field-row,
+  .field-row-2 {
     grid-template-columns: 1fr;
   }
 

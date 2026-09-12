@@ -11,10 +11,11 @@ editoriales y en distintos países del mundo.
 - **Buscador**: por título (original o de edición) o por autor.
 - **Vista de detalle**: al hacer clic en una portada se abre una ventana con
   la portada principal, el título de esa edición, el título original del
-  libro, autor, editorial, país, idioma, año, la sinopsis del libro (de qué
-  trata) y, solo cuando están disponibles para esa edición, sus
-  características de diseño editorial y de diseño de portada/ilustración,
-  además de un enlace para ver o leer esa edición.
+  libro, autor, editorial, país, idioma, año y, solo cuando están
+  disponibles para esa edición, el diseño editorial y el nombre de quien
+  diseñó o ilustró la portada (con enlace a su portafolio si se cargó uno).
+  Debajo, en texto más chico, la sinopsis del libro y un enlace para ver o
+  leer esa edición. El foco es la ficha de diseño, no la reseña literaria.
 - **Comparación entre ediciones**: debajo de la información aparecen
   miniaturas de las demás ediciones del mismo libro; al hacer clic en una
   miniatura, esa edición pasa a ser la portada principal y su información
@@ -64,10 +65,13 @@ coversign/
 Cada nota de `Biblioteca/` tiene frontmatter (`title`, `author`,
 `originalLanguage`) y el cuerpo de la nota es la sinopsis del libro. Cada
 nota de `Archivero/<libro>/` describe una edición concreta (`publisher`,
-`country`, `language`, `year`, `cover`, `editorialDesign`, `coverArt`,
-`sourceLink`, `sourceSite`) y enlaza a su libro mediante el campo `book`.
-`editorialDesign` y `coverArt` son opcionales: solo se muestran en la
-interfaz cuando la nota los incluye.
+`country`, `language`, `year`, `cover`, `editorialDesign`, `illustrator`,
+`illustratorUrl`, `sourceLink`, `sourceSite`) y enlaza a su libro mediante
+el campo `book`. `editorialDesign`, `illustrator` e `illustratorUrl` son
+opcionales: solo se muestran en la interfaz cuando la nota los incluye.
+`illustrator` es el nombre de quien diseñó o ilustró esa portada (no una
+descripción del diseño), pensado para dar crédito a la persona;
+`illustratorUrl` es un enlace opcional a su portafolio.
 
 Para trabajar con el catálogo desde Obsidian, abre la carpeta `coversign/`
 como vault: cada libro y cada edición es una nota editable, y las imágenes

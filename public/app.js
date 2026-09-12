@@ -22,7 +22,7 @@
   const detailYearEl = document.getElementById('detail-year');
   const detailDescriptionEl = document.getElementById('detail-description');
   const detailEditorialDesignEl = document.getElementById('detail-editorial-design');
-  const detailCoverArtEl = document.getElementById('detail-cover-art');
+  const detailIllustratorEl = document.getElementById('detail-illustrator');
   const detailSourceEl = document.getElementById('detail-source');
   const detailSourceSiteEl = document.getElementById('detail-source-site');
   const detailEditionsRow = document.getElementById('detail-editions-row');
@@ -155,6 +155,25 @@
     }
   }
 
+  function setIllustrator(el, name, url) {
+    el.innerHTML = '';
+    if (!name) {
+      el.hidden = true;
+      return;
+    }
+    el.hidden = false;
+    if (url) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.textContent = name;
+      el.appendChild(a);
+    } else {
+      el.textContent = name;
+    }
+  }
+
   function renderDetail() {
     const book = state.currentBook;
     const edition = book.editions[state.currentEditionIndex];
@@ -174,7 +193,7 @@
     detailDescriptionEl.textContent = book.description || 'Sin descripción disponible para este libro.';
 
     setNote(detailEditorialDesignEl, 'Diseño editorial', edition.editorialDesign);
-    setNote(detailCoverArtEl, 'Diseño de portada / ilustración', edition.coverArt);
+    setIllustrator(detailIllustratorEl, edition.illustrator, edition.illustratorUrl);
 
     if (edition.sourceLink) {
       detailSourceEl.hidden = false;

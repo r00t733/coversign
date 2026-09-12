@@ -191,7 +191,8 @@ app.post('/api/books', upload.single('coverFile'), (req, res) => {
     year: body.year ? Number(body.year) : null,
     cover,
     editorialDesign: String(body.editorialDesign || '').trim(),
-    coverArt: String(body.coverArt || '').trim(),
+    illustrator: String(body.illustrator || '').trim(),
+    illustratorUrl: String(body.illustratorUrl || '').trim(),
     sourceLink: String(body.sourceLink || '').trim(),
     sourceSite: String(body.sourceSite || '').trim()
   });
@@ -229,7 +230,8 @@ app.post('/api/books/:id/editions', upload.single('coverFile'), (req, res) => {
     year: body.year ? Number(body.year) : null,
     cover,
     editorialDesign: String(body.editorialDesign || '').trim(),
-    coverArt: String(body.coverArt || '').trim(),
+    illustrator: String(body.illustrator || '').trim(),
+    illustratorUrl: String(body.illustratorUrl || '').trim(),
     sourceLink: String(body.sourceLink || '').trim(),
     sourceSite: String(body.sourceSite || '').trim()
   });

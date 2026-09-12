@@ -71,7 +71,8 @@ function readEditions(bookSlug) {
         year: d.year || null,
         coverUrl: resolveCoverUrl(d.cover),
         editorialDesign: d.editorialDesign || '',
-        coverArt: d.coverArt || '',
+        illustrator: d.illustrator || '',
+        illustratorUrl: d.illustratorUrl || '',
         sourceLink: d.sourceLink || '',
         sourceSite: d.sourceSite || ''
       };
@@ -126,7 +127,8 @@ function writeEditionNote(bookSlug, editionSlug, fields) {
     year: fields.year || '',
     cover: fields.cover || '',
     editorialDesign: fields.editorialDesign || '',
-    coverArt: fields.coverArt || '',
+    illustrator: fields.illustrator || '',
+    illustratorUrl: fields.illustratorUrl || '',
     sourceLink: fields.sourceLink || '',
     sourceSite: fields.sourceSite || ''
   });

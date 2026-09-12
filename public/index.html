@@ -50,9 +50,9 @@
             <div><dt>Año</dt><dd id="detail-year"></dd></div>
           </dl>
 
-          <p id="detail-description" class="detail-block"></p>
           <p id="detail-editorial-design" class="detail-block detail-note" hidden></p>
-          <p id="detail-cover-art" class="detail-block detail-note" hidden></p>
+          <p id="detail-illustrator" class="detail-block detail-illustrator" hidden></p>
+          <p id="detail-description" class="detail-block detail-description"></p>
 
           <div id="detail-source-block" class="detail-source-block">
             <a id="detail-source" class="detail-source" target="_blank" rel="noopener">Ver / leer esta edición →</a>
@@ -152,10 +152,16 @@
           <span>Diseño editorial (si se conoce)</span>
           <textarea name="editorialDesign" rows="2" placeholder="Colección, formato, tipografía institucional..."></textarea>
         </label>
-        <label class="field">
-          <span>Diseño de portada / ilustración (si se conoce)</span>
-          <textarea name="coverArt" rows="2" placeholder="Técnica, ilustrador, motivo gráfico..."></textarea>
-        </label>
+        <div class="field-row field-row-2">
+          <label class="field">
+            <span>Diseñador/a o ilustrador/a de la portada (si se conoce)</span>
+            <input type="text" name="illustrator" placeholder="Nombre de la persona">
+          </label>
+          <label class="field">
+            <span>Su portafolio (opcional)</span>
+            <input type="url" name="illustratorUrl" placeholder="https://...">
+          </label>
+        </div>
 
         <label class="field">
           <span>Link para ver / leer esta edición</span>
