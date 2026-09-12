@@ -34,6 +34,17 @@
   const bookSelect = document.getElementById('book-select');
   const newBookFields = document.getElementById('new-book-fields');
   const contributeBtn = document.getElementById('contribute-btn');
+  const lookupIsbnInput = document.getElementById('lookup-isbn');
+  const lookupBtn = document.getElementById('lookup-btn');
+  const lookupMsg = document.getElementById('lookup-msg');
+
+  // ---------- PWA: instalación y navegación sin conexión ----------
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch((err) => console.warn('No se pudo registrar el service worker', err));
+    });
+  }
 
   // ---------- helpers ----------
 
@@ -232,11 +243,51 @@
 
   contributeBtn.addEventListener('click', () => {
     contributeError.hidden = true;
+    lookupMsg.hidden = true;
     contributeForm.reset();
     populateBookSelect();
     toggleNewBookFields();
     detailModal.hidden = true;
     contributeModal.hidden = false;
+  });
+
+  function setField(name, value) {
+    if (value === undefined || value === null || value === '') return;
+    const field = contributeForm.elements[name];
+    if (field) field.value = value;
+  }
+
+  lookupBtn.addEventListener('click', async () => {
+    const isbn = lookupIsbnInput.value.trim();
+    lookupMsg.hidden = false;
+    lookupMsg.className = 'lookup-msg';
+    lookupMsg.textContent = 'Buscando...';
+    lookupBtn.disabled = true;
+
+    try {
+      const data = await fetchJSON(`/api/lookup?isbn=${encodeURIComponent(isbn)}`);
+      setField('title', data.title);
+      setField('publisher', data.publisher);
+      setField('language', data.language);
+      setField('year', data.year);
+      setField('coverUrl', data.coverUrl);
+
+      if (bookSelect.value === '__new__') {
+        setField('originalTitle', data.title);
+        setField('author', data.author);
+        setField('originalLanguage', data.language);
+        setField('description', data.description);
+      }
+
+      lookupMsg.className = 'lookup-msg ok';
+      lookupMsg.textContent = 'Datos precargados. Revisá el país y completá lo que falte antes de publicar.';
+      document.getElementsByName('country')[0].focus();
+    } catch (err) {
+      lookupMsg.className = 'lookup-msg error';
+      lookupMsg.textContent = err.message;
+    } finally {
+      lookupBtn.disabled = false;
+    }
   });
 
   document.querySelectorAll('[data-close-contribute]').forEach((btn) =>

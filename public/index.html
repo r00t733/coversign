@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>coversign — comparador de portadas de libros</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#17181c">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -72,6 +76,18 @@
       <p class="muted small">Suma una edición de un libro existente o registra un libro nuevo con su primera portada. La carga es manual.</p>
 
       <form id="contribute-form" novalidate>
+        <div class="lookup-box">
+          <label class="field">
+            <span>Autocompletar por ISBN (opcional)</span>
+            <div class="lookup-row">
+              <input type="text" id="lookup-isbn" placeholder="Ej. 9780141187761" inputmode="numeric">
+              <button type="button" id="lookup-btn" class="btn">Buscar</button>
+            </div>
+          </label>
+          <p id="lookup-msg" class="lookup-msg" hidden></p>
+          <p class="muted small">Busca el libro por su ISBN en una base pública y precarga título, autor, editorial, año, idioma, portada y sinopsis. Revisa y completa lo que falte (como el país) antes de publicar — necesita conexión a internet.</p>
+        </div>
+
         <label class="field">
           <span>Libro</span>
           <select id="book-select">

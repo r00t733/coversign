@@ -31,6 +31,14 @@ editoriales y en distintos países del mundo.
   edición ya registrada, la API lo rechaza (409) en vez de sobrescribirla;
   cualquier corrección debe cargarse como una edición nueva y distinguible
   (por ejemplo, con otro año o una nota que la diferencie).
+- **Autocompletar por ISBN**: en el formulario de aporte, buscar un ISBN
+  consulta la API pública de Google Books y precarga título, autor,
+  editorial, año, idioma, portada y sinopsis; el país y los datos de
+  diseño quedan para completar a mano. Necesita conexión a internet.
+- **Instalable como app (PWA)**: desde el navegador (celular o escritorio)
+  se puede "agregar a la pantalla de inicio". Una vez instalada, navegar
+  el catálogo y las portadas ya visitadas funciona sin conexión; aportar
+  una portada nueva o autocompletar por ISBN sigue necesitando internet.
 
 ## Arquitectura: un vault de Obsidian como base de datos
 
@@ -48,7 +56,9 @@ coversign/
   Covers/
     <libro>/             # imágenes de portada subidas manualmente
   server/                # backend Express que sirve la API sobre el vault
-  public/                # frontend (HTML/CSS/JS sin frameworks)
+  public/                # frontend (HTML/CSS/JS sin frameworks) + PWA
+                          # (manifest.webmanifest, sw.js, icons/)
+  scripts/               # utilidades de build (generate-icons.js)
 ```
 
 Cada nota de `Biblioteca/` tiene frontmatter (`title`, `author`,
@@ -70,12 +80,15 @@ de `Covers/` se pueden insertar en cualquier nota con `![[Covers/...]]`.
 | GET    | `/api/books`                 | Lista todos los libros (edición destacada)      |
 | GET    | `/api/search?q=texto`         | Busca por título, autor, editorial o país       |
 | GET    | `/api/books/:id`              | Detalle de un libro con todas sus ediciones     |
+| GET    | `/api/lookup?isbn=...`        | Autocompleta datos desde Google Books por ISBN  |
 | POST   | `/api/books`                  | Crea un libro nuevo con su primera edición      |
 | POST   | `/api/books/:id/editions`     | Agrega una edición a un libro existente         |
 
 Los dos `POST` aceptan `multipart/form-data`: si se envía el campo de
 archivo `coverFile`, la imagen se guarda en `Covers/<libro>/`; si en cambio
-se envía `coverUrl`, se enlaza esa URL externa sin descargarla.
+se envía `coverUrl`, se enlaza esa URL externa sin descargarla. Si el
+servidor corre detrás de un proxy HTTP(S), `/api/lookup` lo usa
+automáticamente a partir de la variable de entorno `HTTPS_PROXY`.
 
 ## Uso
 
@@ -84,4 +97,15 @@ npm install
 npm start
 ```
 
-La aplicación queda disponible en `http://localhost:3000`.
+La aplicación queda disponible en `http://localhost:3000`. Para
+regenerar los íconos de la PWA: `node scripts/generate-icons.js`.
+
+## Publicarlo como sección de otro sitio
+
+coversign necesita un proceso Node corriendo (no es un sitio estático),
+así que para incrustarlo en un sitio existente hay dos caminos: alojar
+este servidor aparte (tu propio VPS, Railway, Render, Fly.io, etc.) y
+exponerlo en una subruta o subdominio de tu dominio principal mediante un
+proxy inverso (nginx, Apache, o el de tu hosting); o, si no querés tocar
+la infraestructura del sitio principal, embeberlo con un `<iframe>` que
+apunte a donde esté alojado.

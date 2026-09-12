@@ -437,6 +437,34 @@ main {
   margin: 4px 0 12px;
 }
 
+.lookup-box {
+  border: 1px dashed var(--border-soft);
+  padding: 12px 14px 4px;
+  margin-bottom: 18px;
+}
+
+.lookup-row {
+  display: flex;
+  gap: 8px;
+}
+
+.lookup-row input {
+  flex: 1;
+}
+
+.lookup-msg {
+  font-size: 0.8rem;
+  margin: 0 0 8px;
+}
+
+.lookup-msg.error {
+  color: #b00020;
+}
+
+.lookup-msg.ok {
+  color: var(--fg);
+}
+
 /* ---------- Footer ---------- */
 
 .site-footer {

@@ -1,7 +1,18 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const { fetch: undiciFetch, ProxyAgent } = require('undici');
 const vault = require('./vault');
+
+// Si el servidor corre detrás de un proxy HTTP(S) (frecuente en redes
+// corporativas), lo usamos para las consultas salientes a la API de
+// autocompletado; si no hay proxy configurado, se conecta directo.
+const PROXY_URL = process.env.HTTPS_PROXY || process.env.https_proxy || '';
+const proxyAgent = PROXY_URL ? new ProxyAgent(PROXY_URL) : undefined;
+
+function fetchExternal(url) {
+  return undiciFetch(url, proxyAgent ? { dispatcher: proxyAgent } : undefined);
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -83,6 +94,55 @@ function resolveCover(req, bookSlug, editionSlug) {
   }
   return { cover: '' };
 }
+
+const LANGUAGE_NAMES = {
+  en: 'Inglés',
+  es: 'Español',
+  fr: 'Francés',
+  de: 'Alemán',
+  it: 'Italiano',
+  pt: 'Portugués',
+  ja: 'Japonés',
+  zh: 'Chino',
+  ru: 'Ruso',
+  ca: 'Catalán'
+};
+
+// Autocompletar por ISBN: consulta la API pública de Google Books y
+// normaliza la respuesta a los campos que usa el formulario de aporte.
+// Requiere conexión a internet; no funciona sin conexión (a diferencia
+// de navegar el catálogo ya visitado, que sí funciona offline).
+app.get('/api/lookup', async (req, res) => {
+  const isbn = (req.query.isbn || '').replace(/[^0-9Xx]/g, '');
+  if (!isbn) return res.status(400).json({ error: 'Indicá un ISBN.' });
+
+  try {
+    const apiRes = await fetchExternal(`https://www.googleapis.com/books/v1/volumes?q=isbn:${encodeURIComponent(isbn)}`);
+    if (apiRes.status === 429) {
+      return res.status(503).json({ error: 'Se alcanzó el límite de consultas a la base de datos de libros. Probá de nuevo en un momento.' });
+    }
+    if (!apiRes.ok) throw new Error(`La búsqueda respondió con estado ${apiRes.status}.`);
+    const data = await apiRes.json();
+    const item = data.items && data.items[0];
+    if (!item) return res.status(404).json({ error: 'No se encontró ningún libro con ese ISBN.' });
+
+    const info = item.volumeInfo || {};
+    const year = info.publishedDate ? parseInt(info.publishedDate.slice(0, 4), 10) : null;
+
+    res.json({
+      title: info.title || '',
+      author: (info.authors || []).join(', '),
+      publisher: info.publisher || '',
+      year: Number.isInteger(year) ? year : null,
+      language: LANGUAGE_NAMES[info.language] || info.language || '',
+      description: (info.description || '').trim(),
+      coverUrl: info.imageLinks ? (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '').replace('http://', 'https://') : ''
+    });
+  } catch (err) {
+    console.error('Fallo en /api/lookup:', err.message);
+    res.status(502).json({ error: 'No se pudo consultar la base de datos de libros. Revisá tu conexión e intentá de nuevo.' });
+  }
+});
 
 app.get('/api/books', (req, res) => {
   res.json(vault.getAllBooks().map(summarize));
