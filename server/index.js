@@ -59,6 +59,19 @@ function validateEdition(body) {
   return null;
 }
 
+// Las ediciones ya aportadas son inmutables: nadie puede editar su
+// información ni reemplazar su imagen. Si los datos nuevos describen la
+// misma edición (misma editorial, país y año) que una ya existente, se
+// rechaza en vez de sobrescribirla.
+function findConflictingEdition(book, body) {
+  const country = vault.slugify(body.country);
+  const publisher = vault.slugify(body.publisher);
+  const year = body.year ? Number(body.year) : null;
+  return book.editions.find(
+    (e) => vault.slugify(e.country) === country && vault.slugify(e.publisher) === publisher && (e.year || null) === year
+  );
+}
+
 function resolveCover(req, bookSlug, editionSlug) {
   if (req.file) {
     const ext = EXT_BY_MIME[req.file.mimetype];
@@ -134,6 +147,13 @@ app.post('/api/books/:id/editions', upload.single('coverFile'), (req, res) => {
   const body = req.body || {};
   const editionError = validateEdition(body);
   if (editionError) return res.status(400).json({ error: editionError });
+
+  if (findConflictingEdition(book, body)) {
+    return res.status(409).json({
+      error:
+        'Ya existe una edición registrada con esa editorial, país y año. Las ediciones ya aportadas no se pueden editar ni reemplazar su imagen; si tenés datos distintos, aportalos como una edición nueva (por ejemplo, con otro año).'
+    });
+  }
 
   const existingEditionSlugs = new Set(book.editions.map((e) => e.slug));
   const editionSlug = vault.uniqueSlug(vault.slugify(`${body.country}-${body.publisher}`), existingEditionSlugs);

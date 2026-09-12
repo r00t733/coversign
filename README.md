@@ -25,6 +25,12 @@ editoriales y en distintos países del mundo.
   primera portada. La imagen se puede **subir directamente como archivo**
   (JPG, PNG, WEBP o GIF) o, alternativamente, enlazar por URL. Toda la
   carga de datos y la colaboración son manuales.
+- **Las ediciones ya aportadas son inmutables**: no existe forma de editar
+  la información de una edición ya publicada ni de reemplazar su imagen.
+  Si un aporte nuevo describe la misma editorial, país y año que una
+  edición ya registrada, la API lo rechaza (409) en vez de sobrescribirla;
+  cualquier corrección debe cargarse como una edición nueva y distinguible
+  (por ejemplo, con otro año o una nota que la diferencie).
 
 ## Arquitectura: un vault de Obsidian como base de datos
 
