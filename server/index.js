@@ -1,12 +1,28 @@
 const express = require('express');
+const multer = require('multer');
 const path = require('path');
-const { readDb, writeDb, slugify, uniqueId } = require('./db');
+const vault = require('./vault');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+vault.ensureDirs();
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 8 * 1024 * 1024 }
+});
+
+const EXT_BY_MIME = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'image/gif': 'gif'
+};
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use('/covers', express.static(vault.COVERS_DIR));
 
 function summarize(book) {
   const featured = book.editions[0];
@@ -43,42 +59,36 @@ function validateEdition(body) {
   return null;
 }
 
-function buildEdition(body, id) {
-  return {
-    id,
-    title: String(body.title).trim(),
-    publisher: String(body.publisher).trim(),
-    country: String(body.country).trim(),
-    language: String(body.language).trim(),
-    year: body.year ? Number(body.year) : null,
-    coverUrl: String(body.coverUrl || '').trim(),
-    description: String(body.description || '').trim(),
-    designNotes: String(body.designNotes || '').trim(),
-    sourceLink: String(body.sourceLink || '').trim(),
-    sourceSite: String(body.sourceSite || '').trim()
-  };
+function resolveCover(req, bookSlug, editionSlug) {
+  if (req.file) {
+    const ext = EXT_BY_MIME[req.file.mimetype];
+    if (!ext) return { error: 'La imagen debe ser JPG, PNG, WEBP o GIF.' };
+    return { cover: vault.saveCoverFile(bookSlug, editionSlug, req.file.buffer, ext) };
+  }
+  if (req.body.coverUrl && String(req.body.coverUrl).trim()) {
+    return { cover: String(req.body.coverUrl).trim() };
+  }
+  return { cover: '' };
 }
 
 app.get('/api/books', (req, res) => {
-  const db = readDb();
-  res.json(db.books.map(summarize));
+  res.json(vault.getAllBooks().map(summarize));
 });
 
 app.get('/api/search', (req, res) => {
   const q = (req.query.q || '').trim();
-  const db = readDb();
-  const results = q ? db.books.filter((b) => matches(b, q)) : db.books;
+  const books = vault.getAllBooks();
+  const results = q ? books.filter((b) => matches(b, q)) : books;
   res.json(results.map(summarize));
 });
 
 app.get('/api/books/:id', (req, res) => {
-  const db = readDb();
-  const book = db.books.find((b) => b.id === req.params.id);
+  const book = vault.getBook(req.params.id);
   if (!book) return res.status(404).json({ error: 'Libro no encontrado.' });
   res.json(book);
 });
 
-app.post('/api/books', (req, res) => {
+app.post('/api/books', upload.single('coverFile'), (req, res) => {
   const body = req.body || {};
   if (!body.originalTitle || !String(body.originalTitle).trim()) {
     return res.status(400).json({ error: 'El título original es obligatorio.' });
@@ -86,39 +96,72 @@ app.post('/api/books', (req, res) => {
   const editionError = validateEdition(body);
   if (editionError) return res.status(400).json({ error: editionError });
 
-  const db = readDb();
-  const existingBookIds = new Set(db.books.map((b) => b.id));
-  const bookId = uniqueId(slugify(body.originalTitle), existingBookIds);
-  const editionId = uniqueId(slugify(`${bookId}-${body.country}-${body.publisher}`), new Set());
+  const existingBookSlugs = new Set(vault.listBookSlugs());
+  const bookSlug = vault.uniqueSlug(vault.slugify(body.originalTitle), existingBookSlugs);
+  const editionSlug = vault.uniqueSlug(vault.slugify(`${body.country}-${body.publisher}`), new Set());
 
-  const book = {
-    id: bookId,
+  const { cover, error } = resolveCover(req, bookSlug, editionSlug);
+  if (error) return res.status(400).json({ error });
+
+  vault.writeBookNote(bookSlug, {
     originalTitle: String(body.originalTitle).trim(),
-    author: String(body.author || '').trim() || 'Autor desconocido',
+    author: String(body.author || '').trim(),
     originalLanguage: String(body.originalLanguage || body.language || '').trim(),
-    editions: [buildEdition(body, editionId)]
-  };
+    description: String(body.description || '').trim()
+  });
 
-  db.books.push(book);
-  writeDb(db);
-  res.status(201).json(book);
+  vault.writeEditionNote(bookSlug, editionSlug, {
+    title: String(body.title).trim(),
+    publisher: String(body.publisher).trim(),
+    country: String(body.country).trim(),
+    language: String(body.language).trim(),
+    year: body.year ? Number(body.year) : null,
+    cover,
+    editorialDesign: String(body.editorialDesign || '').trim(),
+    coverArt: String(body.coverArt || '').trim(),
+    sourceLink: String(body.sourceLink || '').trim(),
+    sourceSite: String(body.sourceSite || '').trim()
+  });
+
+  res.status(201).json(vault.getBook(bookSlug));
 });
 
-app.post('/api/books/:id/editions', (req, res) => {
-  const db = readDb();
-  const book = db.books.find((b) => b.id === req.params.id);
+app.post('/api/books/:id/editions', upload.single('coverFile'), (req, res) => {
+  const bookSlug = req.params.id;
+  const book = vault.getBook(bookSlug);
   if (!book) return res.status(404).json({ error: 'Libro no encontrado.' });
 
   const body = req.body || {};
   const editionError = validateEdition(body);
   if (editionError) return res.status(400).json({ error: editionError });
 
-  const existingEditionIds = new Set(book.editions.map((e) => e.id));
-  const editionId = uniqueId(slugify(`${book.id}-${body.country}-${body.publisher}`), existingEditionIds);
+  const existingEditionSlugs = new Set(book.editions.map((e) => e.slug));
+  const editionSlug = vault.uniqueSlug(vault.slugify(`${body.country}-${body.publisher}`), existingEditionSlugs);
 
-  book.editions.push(buildEdition(body, editionId));
-  writeDb(db);
-  res.status(201).json(book);
+  const { cover, error } = resolveCover(req, bookSlug, editionSlug);
+  if (error) return res.status(400).json({ error });
+
+  vault.writeEditionNote(bookSlug, editionSlug, {
+    title: String(body.title).trim(),
+    publisher: String(body.publisher).trim(),
+    country: String(body.country).trim(),
+    language: String(body.language).trim(),
+    year: body.year ? Number(body.year) : null,
+    cover,
+    editorialDesign: String(body.editorialDesign || '').trim(),
+    coverArt: String(body.coverArt || '').trim(),
+    sourceLink: String(body.sourceLink || '').trim(),
+    sourceSite: String(body.sourceSite || '').trim()
+  });
+
+  res.status(201).json(vault.getBook(bookSlug));
+});
+
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({ error: 'La imagen supera el tamaño máximo permitido (8 MB).' });
+  }
+  next(err);
 });
 
 app.listen(PORT, () => {

@@ -99,11 +99,21 @@ a {
   margin-top: 8px;
 }
 
+/* ---------- Tagline ---------- */
+
+.tagline {
+  margin: 0;
+  padding: 16px 28px 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  max-width: 62ch;
+}
+
 /* ---------- Main / grid ---------- */
 
 main {
   flex: 1;
-  padding: 28px;
+  padding: 16px 28px 28px;
 }
 
 .empty-state {
@@ -114,8 +124,8 @@ main {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 28px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 3px;
 }
 
 .card {
@@ -123,26 +133,13 @@ main {
   border: none;
   background: none;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  display: block;
 }
 
-.card:focus {
+.card:focus-visible {
   outline: 2px solid var(--fg);
   outline-offset: 2px;
-}
-
-.card-title {
-  margin: 0;
-  font-size: 0.85rem;
-  line-height: 1.3;
-}
-
-.card-author {
-  margin: 0;
-  font-size: 0.75rem;
-  color: var(--muted);
+  z-index: 1;
 }
 
 /* ---------- Cover (shared image / placeholder component) ---------- */
@@ -151,15 +148,18 @@ main {
   position: relative;
   width: 100%;
   aspect-ratio: 2 / 3;
-  border: 1px solid var(--border-soft);
   overflow: hidden;
   background: var(--bg);
-  transition: border-color 0.15s ease;
+}
+
+.card .cover {
+  transition: transform 0.2s ease, filter 0.2s ease;
 }
 
 .card:hover .cover,
-.card:focus .cover {
-  border-color: var(--fg);
+.card:focus-visible .cover {
+  transform: scale(1.03);
+  filter: brightness(0.94);
 }
 
 .cover img {
@@ -170,6 +170,8 @@ main {
 }
 
 .cover-placeholder {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -178,7 +180,17 @@ main {
   font-size: 0.75rem;
   line-height: 1.35;
   color: var(--muted);
-  border-style: dashed;
+  border: 1px dashed var(--border-soft);
+  background: var(--bg);
+}
+
+.detail-cover-col .cover,
+.edition-thumb .cover {
+  border: 1px solid var(--border-soft);
+}
+
+.edition-thumb.active .cover {
+  border: 2px solid var(--fg);
 }
 
 /* ---------- Modal ---------- */
@@ -287,6 +299,23 @@ main {
   display: none;
 }
 
+.detail-note {
+  padding-left: 12px;
+  border-left: 2px solid var(--border-soft);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.detail-note::before {
+  content: attr(data-label);
+  display: block;
+  color: var(--fg);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+
 .detail-source-block {
   margin-bottom: 24px;
   display: flex;
@@ -333,14 +362,6 @@ main {
   gap: 4px;
 }
 
-.edition-thumb .cover {
-  border-width: 1px;
-}
-
-.edition-thumb.active .cover {
-  border: 2px solid var(--fg);
-}
-
 .edition-thumb-label {
   font-size: 0.65rem;
   color: var(--muted);
@@ -380,6 +401,11 @@ main {
   background: var(--bg);
   color: var(--fg);
   resize: vertical;
+}
+
+.field input[type="file"] {
+  padding: 6px;
+  font-size: 0.8rem;
 }
 
 .field input:focus,
@@ -439,7 +465,11 @@ main {
     padding: 16px;
   }
 
+  .tagline {
+    padding: 14px 16px 0;
+  }
+
   main {
-    padding: 16px;
+    padding: 14px 16px 16px;
   }
 }

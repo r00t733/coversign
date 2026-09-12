@@ -20,8 +20,9 @@
   const detailCountryEl = document.getElementById('detail-country');
   const detailLanguageEl = document.getElementById('detail-language');
   const detailYearEl = document.getElementById('detail-year');
-  const detailDesignEl = document.getElementById('detail-design');
   const detailDescriptionEl = document.getElementById('detail-description');
+  const detailEditorialDesignEl = document.getElementById('detail-editorial-design');
+  const detailCoverArtEl = document.getElementById('detail-cover-art');
   const detailSourceEl = document.getElementById('detail-source');
   const detailSourceSiteEl = document.getElementById('detail-source-site');
   const detailEditionsRow = document.getElementById('detail-editions-row');
@@ -54,15 +55,20 @@
       img.loading = 'lazy';
       img.addEventListener('error', () => {
         wrapper.innerHTML = '';
-        wrapper.classList.add('cover-placeholder');
-        wrapper.textContent = title;
+        wrapper.appendChild(placeholderEl(title));
       });
       wrapper.appendChild(img);
     } else {
-      wrapper.classList.add('cover-placeholder');
-      wrapper.textContent = title;
+      wrapper.appendChild(placeholderEl(title));
     }
     return wrapper;
+  }
+
+  function placeholderEl(title) {
+    const ph = document.createElement('div');
+    ph.className = 'cover-placeholder';
+    ph.textContent = title;
+    return ph;
   }
 
   function debounce(fn, delay) {
@@ -73,36 +79,19 @@
     };
   }
 
-  // ---------- grid ----------
+  // ---------- grid (solo imágenes; el resto se revela al hacer clic) ----------
 
   function renderGrid(books) {
     gridEl.innerHTML = '';
     emptyStateEl.hidden = books.length > 0;
 
     books.forEach((book) => {
-      const card = document.createElement('article');
+      const card = document.createElement('button');
+      card.type = 'button';
       card.className = 'card';
-      card.tabIndex = 0;
-      card.dataset.bookId = book.id;
-
+      card.setAttribute('aria-label', `${book.originalTitle} — ${book.author}`);
       card.appendChild(createCoverEl(book.featured.coverUrl, book.featured.title));
-
-      const titleEl = document.createElement('p');
-      titleEl.className = 'card-title';
-      titleEl.textContent = book.originalTitle;
-
-      const authorEl = document.createElement('p');
-      authorEl.className = 'card-author';
-      authorEl.textContent = book.author;
-
-      card.append(titleEl, authorEl);
       card.addEventListener('click', () => openDetail(book.id));
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          openDetail(book.id);
-        }
-      });
       gridEl.appendChild(card);
     });
   }
@@ -144,6 +133,17 @@
     detailModal.hidden = false;
   }
 
+  function setNote(el, label, value) {
+    if (value) {
+      el.hidden = false;
+      el.dataset.label = label;
+      el.textContent = value;
+    } else {
+      el.hidden = true;
+      el.textContent = '';
+    }
+  }
+
   function renderDetail() {
     const book = state.currentBook;
     const edition = book.editions[state.currentEditionIndex];
@@ -160,15 +160,10 @@
     detailLanguageEl.textContent = edition.language || '—';
     detailYearEl.textContent = edition.year || '—';
 
-    if (edition.designNotes) {
-      detailDesignEl.hidden = false;
-      detailDesignEl.textContent = `Diseño de portada: ${edition.designNotes}`;
-    } else {
-      detailDesignEl.hidden = true;
-      detailDesignEl.textContent = '';
-    }
+    detailDescriptionEl.textContent = book.description || 'Sin descripción disponible para este libro.';
 
-    detailDescriptionEl.textContent = edition.description || 'Sin descripción disponible para esta edición.';
+    setNote(detailEditorialDesignEl, 'Diseño editorial', edition.editorialDesign);
+    setNote(detailCoverArtEl, 'Diseño de portada / ilustración', edition.coverArt);
 
     if (edition.sourceLink) {
       detailSourceEl.hidden = false;
@@ -258,47 +253,36 @@
     e.preventDefault();
     contributeError.hidden = true;
 
-    const formData = new FormData(contributeForm);
-    const payload = {
-      title: (formData.get('title') || '').trim(),
-      publisher: (formData.get('publisher') || '').trim(),
-      country: (formData.get('country') || '').trim(),
-      language: (formData.get('language') || '').trim(),
-      year: formData.get('year') || '',
-      coverUrl: (formData.get('coverUrl') || '').trim(),
-      description: (formData.get('description') || '').trim(),
-      designNotes: (formData.get('designNotes') || '').trim(),
-      sourceLink: (formData.get('sourceLink') || '').trim(),
-      sourceSite: (formData.get('sourceSite') || '').trim()
-    };
-
     const isNewBook = bookSelect.value === '__new__';
+    const formData = new FormData(contributeForm);
 
-    if (isNewBook) {
-      payload.originalTitle = (formData.get('originalTitle') || '').trim();
-      payload.author = (formData.get('author') || '').trim();
-      payload.originalLanguage = (formData.get('originalLanguage') || '').trim();
-
-      if (!payload.originalTitle) {
-        contributeError.textContent = 'El título original es obligatorio para un libro nuevo.';
-        contributeError.hidden = false;
-        return;
-      }
+    if (isNewBook && !formData.get('originalTitle').trim()) {
+      contributeError.textContent = 'El título original es obligatorio para un libro nuevo.';
+      contributeError.hidden = false;
+      return;
     }
 
-    if (!payload.title || !payload.publisher || !payload.country || !payload.language) {
+    if (!formData.get('title').trim() || !formData.get('publisher').trim() || !formData.get('country').trim() || !formData.get('language').trim()) {
       contributeError.textContent = 'Completa título, editorial, país e idioma de la edición.';
       contributeError.hidden = false;
       return;
     }
 
+    if (!isNewBook) {
+      formData.delete('originalTitle');
+      formData.delete('author');
+      formData.delete('originalLanguage');
+      formData.delete('description');
+    }
+
+    const coverFile = formData.get('coverFile');
+    if (!coverFile || !coverFile.size) formData.delete('coverFile');
+
     try {
       const url = isNewBook ? '/api/books' : `/api/books/${encodeURIComponent(bookSelect.value)}/editions`;
-      const book = await fetchJSON(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      const res = await fetch(url, { method: 'POST', body: formData });
+      const book = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(book.error || 'Ocurrió un error.');
 
       await loadAllBooks();
       contributeModal.hidden = true;

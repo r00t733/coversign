@@ -15,13 +15,15 @@
     </div>
   </header>
 
+  <p class="tagline">Juzga un libro por su portada, y conoce los diseños de otras ediciones del mismo título.</p>
+
   <main>
     <p id="empty-state" class="empty-state" hidden>No se encontraron resultados.</p>
     <section id="grid" class="grid" aria-label="Portadas de libros"></section>
   </main>
 
   <footer class="site-footer">
-    <p>coversign — comparación de portadas de libros por edición, editorial y país.</p>
+    <p>coversign — comparación de portadas de libros por edición, editorial y país. Aportes cargados manualmente.</p>
   </footer>
 
   <!-- Modal de detalle -->
@@ -44,8 +46,9 @@
             <div><dt>Año</dt><dd id="detail-year"></dd></div>
           </dl>
 
-          <div id="detail-design" class="detail-block"></div>
           <p id="detail-description" class="detail-block"></p>
+          <p id="detail-editorial-design" class="detail-block detail-note" hidden></p>
+          <p id="detail-cover-art" class="detail-block detail-note" hidden></p>
 
           <div id="detail-source-block" class="detail-source-block">
             <a id="detail-source" class="detail-source" target="_blank" rel="noopener">Ver / leer esta edición →</a>
@@ -66,7 +69,7 @@
     <div class="modal-panel contribute-panel">
       <button class="modal-close" data-close-contribute type="button" aria-label="Cerrar">×</button>
       <h2>Aportar portada</h2>
-      <p class="muted small">Suma una edición de un libro existente o registra un libro nuevo con su primera portada.</p>
+      <p class="muted small">Suma una edición de un libro existente o registra un libro nuevo con su primera portada. La carga es manual.</p>
 
       <form id="contribute-form" novalidate>
         <label class="field">
@@ -88,6 +91,10 @@
           <label class="field">
             <span>Idioma original</span>
             <input type="text" id="originalLanguage" name="originalLanguage">
+          </label>
+          <label class="field">
+            <span>Descripción / de qué trata el libro</span>
+            <textarea id="description" name="description" rows="3"></textarea>
           </label>
         </fieldset>
 
@@ -116,23 +123,29 @@
         </div>
 
         <label class="field">
-          <span>URL de la portada (imagen)</span>
+          <span>Imagen de la portada (JPG, PNG, WEBP o GIF)</span>
+          <input type="file" name="coverFile" accept="image/jpeg,image/png,image/webp,image/gif">
+        </label>
+        <label class="field">
+          <span>...o URL de la portada, si no subes un archivo</span>
           <input type="url" name="coverUrl" placeholder="https://...">
         </label>
+
         <label class="field">
-          <span>Descripción del libro</span>
-          <textarea name="description" rows="3"></textarea>
+          <span>Diseño editorial (si se conoce)</span>
+          <textarea name="editorialDesign" rows="2" placeholder="Colección, formato, tipografía institucional..."></textarea>
         </label>
         <label class="field">
-          <span>Características de diseño editorial / de portada</span>
-          <textarea name="designNotes" rows="2"></textarea>
+          <span>Diseño de portada / ilustración (si se conoce)</span>
+          <textarea name="coverArt" rows="2" placeholder="Técnica, ilustrador, motivo gráfico..."></textarea>
         </label>
+
         <label class="field">
           <span>Link para ver / leer esta edición</span>
           <input type="url" name="sourceLink" placeholder="https://...">
         </label>
         <label class="field">
-          <span>Sitio de referencia (fuente de los datos)</span>
+          <span>Sitio de referencia (fuente)</span>
           <input type="text" name="sourceSite" placeholder="Ej. Open Library, editorial oficial...">
         </label>
 

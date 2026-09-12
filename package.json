@@ -9,6 +9,8 @@
     "dev": "node server/index.js"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "gray-matter": "^4.0.3",
+    "multer": "^2.3.0"
   }
 }
